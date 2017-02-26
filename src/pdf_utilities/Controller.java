@@ -43,7 +43,7 @@ public class Controller
     }
 
     /**
-     *  Adds a new field for opening a file
+     * Adds a new field for opening a file
      */
     private void addFileField()
     {
@@ -94,7 +94,7 @@ public class Controller
     }
 
     /**
-     *  Adds a new file
+     * Adds a new file
      */
     @FXML
     private void addFile(ActionEvent actionEvent)
@@ -108,7 +108,7 @@ public class Controller
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
         fileChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
-        List<File> files = fileChooser.showOpenMultipleDialog(null);
+        List<File> files = fileChooser.showOpenMultipleDialog(fieldsContainer.getScene().getWindow());
 
         // Add chosen files to a map
         if (files != null)
@@ -129,8 +129,8 @@ public class Controller
     }
 
     /**
-     *  Called by the "More files..." button
-     *  Adds a new field for opening a file
+     * Called by the "More files..." button
+     * Adds a new field for opening a file
      */
     @FXML
     private void addField(ActionEvent actionEvent)
@@ -152,7 +152,8 @@ public class Controller
         fileChooser.setInitialFileName("merged-document.pdf");
 
         //Show save file dialog
-        File fileToSave = fileChooser.showSaveDialog(null);
+        File fileToSave = fileChooser.showSaveDialog(fieldsContainer.getScene().getWindow());
+        if (fileToSave == null) return; // User exited the dialog
 
         // Merge files
         PDFMergerUtility mergerUtility = new PDFMergerUtility();
