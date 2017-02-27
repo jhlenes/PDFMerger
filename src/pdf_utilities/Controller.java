@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -13,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
-import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,7 +67,7 @@ public class Controller
 
         // Button to add more PDF files
         Image imagePDF = new Image(getClass().getResourceAsStream("file-pdf.png"));
-        Button addFileButton = new Button("Open file...");
+        Button addFileButton = new Button("Add file");
         addFileButton.setId("openFileButton" + fieldIndex);
         addFileButton.setOnAction(this::addFile);
         addFileButton.setGraphic(new ImageView(imagePDF));
@@ -129,8 +129,8 @@ public class Controller
     }
 
     /**
-     * Called by the "More files..." button
-     * Adds a new field for opening a file
+     * Called by the "More files..." button.
+     * Adds a new field for opening a file.
      */
     @FXML
     private void addField(ActionEvent actionEvent)
@@ -144,6 +144,15 @@ public class Controller
     @FXML
     private void merge(ActionEvent actionEvent)
     {
+        if (filesToMerge.size() < 2)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You need to specify two or more files in order to merge.");
+            alert.setTitle("Not enough files specified");
+            alert.setHeaderText("Error");
+            alert.showAndWait();
+            return;
+        }
+
         // Customize filechooser
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
@@ -151,38 +160,46 @@ public class Controller
         fileChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
         fileChooser.setInitialFileName("merged-document.pdf");
 
-        //Show save file dialog
+        // Show save file dialog
         File fileToSave = fileChooser.showSaveDialog(fieldsContainer.getScene().getWindow());
         if (fileToSave == null) return; // User exited the dialog
 
         // Merge files
         PDFMergerUtility mergerUtility = new PDFMergerUtility();
-        for (File file : filesToMerge.values())
+        for (int i = 0; i < textFields.size(); i++)
         {
+            File file = filesToMerge.get(i);
             if (file == null) break;
             try
             {
                 mergerUtility.addSource(file);
             } catch (FileNotFoundException e)
             {
-                // TODO: Handle file not found
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The following file could not be found: " + file.getAbsolutePath());
+                alert.setTitle("File not found");
+                alert.setHeaderText("Error");
+                alert.showAndWait();
+                return;
             }
         }
+
         mergerUtility.setDestinationFileName(fileToSave.getAbsolutePath());
         try
         {
             mergerUtility.mergeDocuments(null);
         } catch (IOException e)
         {
-            // TODO: Do something here
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong: " + e.getMessage());
+            alert.setTitle("Something went wrong");
+            alert.setHeaderText("Error");
+            alert.showAndWait();
+            return;
         }
     }
 
     /**
      * Called by the Up arrow button.
-     * Rearranges the order of the PDF files
+     * Rearranges the order of the PDF files.
      */
     private void reorder(ActionEvent actionEvent)
     {
@@ -193,11 +210,11 @@ public class Controller
         File file = filesToMerge.get(fileIndex - 1);
         String fileName = textFields.get(fileIndex - 1).getText();
 
-        // Replace the file above
+        // Replace the file above with file on this line
         filesToMerge.put(fileIndex - 1, filesToMerge.get(fileIndex));
         textFields.get(fileIndex - 1).setText(textFields.get(fileIndex).getText());
 
-        // Replace file on same line
+        // Replace file on this line
         filesToMerge.put(fileIndex, file);
         textFields.get(fileIndex).setText(fileName);
     }
