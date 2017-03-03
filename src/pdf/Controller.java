@@ -329,9 +329,11 @@ public class Controller
                 splitter.setStartPage(startPage);
                 splitter.setEndPage(endPage);
                 splitter.setSplitAtPage(endPage); // This is so that the splitted document can hold up to "endPage" amount of pages, default is 1
-                List<PDDocument> splitted = splitter.split(PDDocument.load(fileToSplit));
+                PDDocument document = PDDocument.load(fileToSplit);
+                List<PDDocument> splitted = splitter.split(document);
                 splitted.get(0).save(fileName);
                 splitted.get(0).close();
+                document.close();
 
             } catch (NumberFormatException e)
             {
