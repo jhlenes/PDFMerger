@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pdf.Controller">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <TabPane prefHeight="622.0" prefWidth="693.0" tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+            <tabs>
+                <Tab text="Merge">
+                    <content>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                            <children>
+                                <VBox fx:id="mergeFieldsContainer" alignment="TOP_CENTER">
+                                    <children>
+                                        <HBox alignment="CENTER" spacing="10.0">
+                                            <children>
+                                                <Button fx:id="moreFilesButton" mnemonicParsing="false" onAction="#addMergeField" text="More files" />
+                                                <Button fx:id="mergeButton" mnemonicParsing="false" onAction="#merge" text="Merge" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </StackPane>
+                    </content>
+                </Tab>
+                <Tab text="Split">
+                    <content>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                            <children>
+                                <VBox fx:id="splitFieldsContainer" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <HBox alignment="CENTER" spacing="10.0">
+                                            <children>
+                                                <TextField fx:id="splitFileField" text="No file chosen" />
+                                                <Button fx:id="selectFileButton" mnemonicParsing="false" onAction="#selectFile" text="Select file">
+                                                </Button>
+                                            </children>
+                                            <padding>
+                                                <Insets top="10.0" />
+                                            </padding>
+                                        </HBox>
+                              <HBox alignment="CENTER" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="addRangeButton" mnemonicParsing="false" onAction="#addSplitField" text="Add range" />
+                                    <Button fx:id="splitButton" mnemonicParsing="false" onAction="#split" text="Split" />
+                                 </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </StackPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</GridPane>

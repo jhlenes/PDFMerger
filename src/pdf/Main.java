@@ -1,4 +1,4 @@
-package pdf_utilities;
+package pdf;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ public class Main extends Application
     public void start(Stage primaryStage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("PDF Merger");
+        primaryStage.setTitle("PDF Utilities");
         primaryStage.setScene(new Scene(root, 800, 500));
         primaryStage.show();
     }
