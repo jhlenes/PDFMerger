@@ -20,6 +20,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.swing.filechooser.FileSystemView;
 import javax.xml.soap.Text;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class Controller
 
     private File fileToSplit;
     private List<TextField[]> splitTextFields = new ArrayList<>();
+
+    private File defaultDirectory = FileSystemView.getFileSystemView().getDefaultDirectory();
 
     @FXML
     private VBox mergeFieldsContainer;
@@ -171,7 +174,7 @@ public class Controller
         fileChooser.setTitle("Choose PDF files to merge");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
+        fileChooser.setInitialDirectory(defaultDirectory);
         List<File> files = fileChooser.showOpenMultipleDialog(mergeFieldsContainer.getScene().getWindow());
 
         // Add chosen files to a map
@@ -184,6 +187,7 @@ public class Controller
                 mergeTextFields.get(i).setText(file.getName());
                 filesToMerge.put(i, file);
                 i++;
+                defaultDirectory = file.getParentFile();
             }
         } else
         {
@@ -203,7 +207,7 @@ public class Controller
         fileChooser.setTitle("Choose PDF file to split");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
+        fileChooser.setInitialDirectory(defaultDirectory);
         File file = fileChooser.showOpenDialog(mergeFieldsContainer.getScene().getWindow());
 
         if (file != null)
@@ -256,7 +260,7 @@ public class Controller
         fileChooser.setTitle("Save merged document");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
+        fileChooser.setInitialDirectory(defaultDirectory);
         fileChooser.setInitialFileName("merged-document.pdf");
 
         // Show save file dialog
@@ -284,6 +288,7 @@ public class Controller
         try
         {
             mergerUtility.mergeDocuments(null);
+            Desktop.getDesktop().open(fileToSave.getParentFile());
         } catch (IOException e)
         {
             showAlert("Error", "Something went wrong", e.getMessage());
@@ -303,7 +308,7 @@ public class Controller
 
         // Customize directorychooser
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(FileSystemView.getFileSystemView().getDefaultDirectory());
+        directoryChooser.setInitialDirectory(fileToSplit.getParentFile());
         directoryChooser.setTitle("Choose directory to save the splitted documents");
         File directory = directoryChooser.showDialog(splitFieldsContainer.getScene().getWindow());
         if (directory == null) return; // User exited the dialog
@@ -334,7 +339,7 @@ public class Controller
                 splitted.get(0).save(fileName);
                 splitted.get(0).close();
                 document.close();
-
+                Desktop.getDesktop().open(directory);
             } catch (NumberFormatException e)
             {
                 showAlert("Error", "Input is not a number", e.getMessage());
